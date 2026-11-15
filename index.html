@@ -48,7 +48,7 @@
       <div class="cards">
         <div class="stat"><small>Your projects</small><strong id="projectCount">0</strong></div>
         <div class="stat"><small>Verification mode</small><strong>Risk-based</strong></div>
-        <div class="stat"><small>Service status</small><strong style="color:var(--good)">Setup</strong></div>
+        <div class="stat"><small>Service status</small><strong id="serviceStatus">Checking…</strong></div>
       </div>
       <div class="create">
         <h3 style="font:600 18px 'Space Grotesk';margin-bottom:5px">Create a project</h3>
@@ -104,7 +104,7 @@
       const email = $("email").value.trim();
       const password = $("password").value;
       const result = authMode === "signup"
-        ? await supabase.auth.signUp({ email, password, options: { emailRedirectTo: location.origin } })
+        ? await supabase.auth.signUp({ email, password, options: { emailRedirectTo: new URL(location.pathname, location.origin).toString() } })
         : await supabase.auth.signInWithPassword({ email, password });
       button.disabled = false;
       if (result.error) { $("authMessage").textContent = result.error.message; return; }
@@ -118,7 +118,10 @@
       await showDashboard(result.data.user);
     });
 
+    let activeUserId = null;
     async function showDashboard(user) {
+      if (activeUserId === user.id && !dashboard.classList.contains("hidden")) return;
+      activeUserId = user.id;
       authPanel.classList.add("hidden");
       dashboard.classList.remove("hidden");
       $("userEmail").textContent = user.email || "Signed in";
@@ -177,15 +180,28 @@
     });
     $("logout").addEventListener("click", async () => {
       await supabase.auth.signOut();
+      activeUserId = null;
       dashboard.classList.add("hidden"); authPanel.classList.remove("hidden");
       setMode("login"); $("password").value = "";
     });
 
     supabase.auth.onAuthStateChange((_event, session) => {
-      if (session?.user) showDashboard(session.user);
-      else { dashboard.classList.add("hidden"); authPanel.classList.remove("hidden"); }
+      queueMicrotask(() => {
+        if (session?.user) void showDashboard(session.user);
+        else { activeUserId = null; dashboard.classList.add("hidden"); authPanel.classList.remove("hidden"); }
+      });
     });
 
+    async function checkServiceStatus() {
+      const status = $("serviceStatus");
+      try {
+        const response = await fetch(SUPABASE_URL + "/functions/v1/reoohb-verify", { cache: "no-store" });
+        const data = await response.json();
+        if (!response.ok || !data.ok) throw new Error("Service unavailable");
+        status.textContent = "Online"; status.style.color = "var(--good)";
+      } catch { status.textContent = "Unavailable"; status.style.color = "#ff9eac"; }
+    }
+    void checkServiceStatus();
     const { data: { session } } = await supabase.auth.getSession();
     if (session?.user) await showDashboard(session.user);
   </script>
