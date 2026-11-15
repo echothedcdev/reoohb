@@ -83,6 +83,41 @@ Deno.serve(async (req: Request) => {
       return reply(200, { project, api_secret: secret, warning: "Copy this secret now. It is shown only once." });
     }
 
+    if (body.action === "create_api_key" || body.action === "list_api_keys" || body.action === "revoke_api_key") {
+      const user = await getUser(req);
+      if (!user) return reply(401, { error: "Please sign in again." });
+      const projectId = typeof body.project_id === "string" ? body.project_id : "";
+      const { data: ownedProject } = await admin.from("reoohb_projects").select("id")
+        .eq("id", projectId).eq("owner_id", user.id).maybeSingle();
+      if (!ownedProject) return reply(404, { error: "Project not found." });
+
+      if (body.action === "create_api_key") {
+        const label = typeof body.label === "string" ? body.label.trim() : "";
+        if (!label || label.length > 60) return reply(400, { error: "Enter a key name up to 60 characters." });
+        const secret = "reo_" + randomHex(32);
+        const { data: key, error } = await admin.from("reoohb_project_api_keys")
+          .insert({ project_id: projectId, label, secret_hash: await sha256(secret) })
+          .select("id,label,created_at").single();
+        if (error || !key) return reply(500, { error: "Could not create this project code." });
+        return reply(200, { key, api_secret: secret, warning: "Copy this code now. It is shown only once." });
+      }
+
+      if (body.action === "list_api_keys") {
+        const { data, error } = await admin.from("reoohb_project_api_keys")
+          .select("id,label,created_at,revoked_at").eq("project_id", projectId)
+          .order("created_at", { ascending: false });
+        if (error) return reply(500, { error: "Could not load project codes." });
+        return reply(200, { keys: data ?? [] });
+      }
+
+      const keyId = typeof body.key_id === "string" ? body.key_id : "";
+      const { data: revoked, error } = await admin.from("reoohb_project_api_keys")
+        .update({ revoked_at: new Date().toISOString() }).eq("id", keyId)
+        .eq("project_id", projectId).is("revoked_at", null).select("id").maybeSingle();
+      if (error || !revoked) return reply(404, { error: "Active project code not found." });
+      return reply(200, { revoked: true });
+    }
+
     if (body.action === "challenge") {
       const project = await projectByPublicId(body.project_id);
       if (!project) return reply(404, { error: "Unknown project." });
@@ -130,9 +165,15 @@ Deno.serve(async (req: Request) => {
       const secret = typeof body.api_secret === "string" ? body.api_secret : "";
       const code = typeof body.code === "string" ? body.code : "";
       if (!project || !secret || !/^[0-9a-f]{64}$/i.test(code)) return reply(400, { valid: false, error: "Invalid credentials or code." });
-      const { data: storedSecret } = await admin.from("reoohb_project_secrets").select("secret_hash")
-        .eq("project_id", project.id).maybeSingle();
-      if (!storedSecret || !safeEqual(await sha256(secret), storedSecret.secret_hash)) return reply(401, { valid: false, error: "Invalid project credentials." });
+      const secretHash = await sha256(secret);
+      const { data: storedApiKey } = await admin.from("reoohb_project_api_keys").select("id,secret_hash")
+        .eq("project_id", project.id).eq("secret_hash", secretHash).is("revoked_at", null).maybeSingle();
+      const { data: legacySecret } = storedApiKey ? { data: null } : await admin.from("reoohb_project_secrets")
+        .select("secret_hash").eq("project_id", project.id).maybeSingle();
+      const credentialValid = storedApiKey
+        ? safeEqual(secretHash, storedApiKey.secret_hash)
+        : !!legacySecret && safeEqual(secretHash, legacySecret.secret_hash);
+      if (!credentialValid) return reply(401, { valid: false, error: "Invalid project credentials." });
       const { data: storedCode } = await admin.from("reoohb_codes").select("id,expires_at,used_at")
         .eq("project_id", project.id).eq("code_hash", await sha256(code)).maybeSingle();
       if (!storedCode || storedCode.used_at || Date.parse(storedCode.expires_at) <= Date.now()) return reply(400, { valid: false, error: "Code expired or already used." });
