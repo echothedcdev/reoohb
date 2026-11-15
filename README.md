@@ -12,6 +12,9 @@ A privacy-conscious website verification prototype.
 
 ## Dashboard
 
+The dashboard checks the Edge Function health endpoint and displays its status. Signup confirmation redirects back to the dashboard path.
+
+
 - Supabase Auth sign-up and login.
 - Authenticated developer dashboard.
 - Create projects and register domains.
@@ -19,7 +22,33 @@ A privacy-conscious website verification prototype.
 - A one-time project API secret. Only its SHA-256 hash is stored server-side.
 - Per-user project access protected by Row Level Security.
 
-## Verification API
+## Add the verification widget to a website
+
+After creating a project in the dashboard, copy its public project ID. Add this to a page on the registered domain:
+
+```html
+<script src="https://echothedcdev.github.io/reoohb/reoohb.js" defer></script>
+<reoohb-widget project-id="YOUR_PUBLIC_PROJECT_ID"></reoohb-widget>
+
+<script>
+  document.addEventListener("reoohb:verified", async (event) => {
+    const response = await fetch("/api/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code: event.detail.code })
+    });
+    const result = await response.json();
+    if (result.valid) {
+      // Continue the visitor's sign-in or form flow.
+    } else {
+      // Keep access blocked and show a retry message.
+    }
+  });
+</script>
+```
+
+The widget gets a challenge and emits a short-lived, single-use code. The browser sends that code to your own backend. Your backend must exchange it with reoohb before granting access. Never trust a browser-only "verified" flag. A complete Node.js HTTP backend example is in [examples/node-server.mjs](examples/node-server.mjs).
+
 
 All POST requests use JSON. Use the Function URL above as `REOOHB_URL`.
 
@@ -92,6 +121,15 @@ if (!result.valid) throw new Error("Verification failed");
 
 The exchange consumes the code atomically. The customer website must create its own session; reoohb does not issue or share a customer session cookie.
 
+## Publishing the dashboard
+
+1. In GitHub, open **Settings → Pages** for this repository.
+2. Under **Build and deployment**, choose **Deploy from a branch**, select **main** and **/(root)**, then save.
+3. The dashboard should publish at `https://echothedcdev.github.io/reoohb/`.
+4. In Supabase **Authentication → URL Configuration**, set the Site URL to `https://echothedcdev.github.io/reoohb/` and add `https://echothedcdev.github.io/reoohb/**` to the Redirect URLs list. This is needed for email confirmation redirects.
+
+The repository is prepared for GitHub Pages, but Pages still needs to be enabled in repository settings.
+
 ## Current limitations
 
 - The arithmetic challenge is only a basic friction test. It is **not proof that a visitor is human**; automated clients can solve it.
@@ -108,3 +146,12 @@ The exchange consumes the code atomically. The customer website must create its 
 - Challenge answers and authorization codes are stored as hashes.
 - Challenges expire after 5 minutes; authorization codes expire after 2 minutes and are single-use.
 - Internal tables have RLS enabled and no permissions for `anon` or `authenticated`; only the server-side service role is granted access.
+
+
+## Privacy and security notes
+
+- The widget does not record mouse movement or audio.
+- It keeps the one-time code in memory and sends it to your backend for exchange.
+- The project API secret belongs only in backend environment variables.
+- Do not grant access based only on the browser event; always complete the server-side exchange.
+- This prototype is not yet suitable as the only protection for sensitive accounts or payments.
