@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#09090f">
+  <title>reoohb — Out Of Here Bots</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:dark;--bg:#09090f;--panel:#11111b;--panel2:#171725;--line:#29293b;--text:#f5f3ff;--muted:#a09db5;--red:#ff435d;--purple:#9b6bff;--good:#56d6a0}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 80% -15%,#38205b55,transparent 38%),radial-gradient(ellipse at 0% 20%,#671d3440,transparent 35%),var(--bg);color:var(--text);font-family:"DM Sans",sans-serif;min-height:100vh}
+    button,input{font:inherit}button{cursor:pointer}.wrap{max-width:1120px;margin:auto;padding:26px 22px 70px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:82px}.brand{display:flex;align-items:center;gap:12px;font:700 23px "Space Grotesk",sans-serif;letter-spacing:-1px}.mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--red),var(--purple));display:grid;place-items:center;font-size:20px;box-shadow:0 7px 30px #a24aff44}.top small{color:var(--muted)}
+    .hero{max-width:760px;margin:0 auto 44px;text-align:center}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid #7547a966;border-radius:99px;color:#d4bfff;background:#8b5cf61a;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase}.dot{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 12px var(--good)}h1,h2,h3,p{margin-top:0}h1{font:700 clamp(42px,7vw,72px)/1.02 "Space Grotesk",sans-serif;letter-spacing:-3px;margin:22px 0 18px}h1 span{background:linear-gradient(90deg,#ff7185,#b58aff);background-clip:text;color:transparent}.lead{color:var(--muted);font-size:17px;line-height:1.7;max-width:620px;margin:0 auto}
+    .panel{max-width:780px;margin:0 auto;background:#11111beF;border:1px solid var(--line);border-radius:22px;padding:26px;box-shadow:0 24px 80px #0007;backdrop-filter:blur(14px)}.panelhead{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:20px}.panelhead h2{font:600 21px "Space Grotesk";margin:0}.sub{font-size:13px;color:var(--muted);margin-top:5px}.tabs{display:flex;gap:6px;background:#09090f;padding:4px;border:1px solid var(--line);border-radius:12px}.tab{border:0;background:transparent;color:var(--muted);padding:8px 12px;border-radius:8px;font-weight:600}.tab.active{background:#282039;color:white}
+    .field{display:grid;gap:7px;margin:14px 0}.field label{font-size:13px;color:#d8d4e8;font-weight:600}.field input{width:100%;padding:13px 14px;border-radius:11px;border:1px solid var(--line);background:#09090f;color:white;outline:none}.field input:focus{border-color:var(--purple);box-shadow:0 0 0 3px #9b6bff22}.hint{font-size:12px;color:var(--muted)}.primary{border:0;border-radius:11px;padding:13px 17px;color:white;font-weight:700;background:linear-gradient(100deg,#e83e60,#8958e9);box-shadow:0 8px 24px #a23b7b33}.primary:disabled{opacity:.55;cursor:wait}.wide{width:100%;margin-top:8px}.ghost{border:1px solid var(--line);background:#171725;color:#ddd8ee;border-radius:10px;padding:10px 13px;font-weight:600}.message{min-height:20px;color:#ff9eac;font-size:13px;margin-top:12px}.hidden{display:none!important}
+    .dash{max-width:980px;margin:0 auto}.dashbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:22px}.dashbar h2{font:700 28px "Space Grotesk";margin:0}.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:18px}.stat,.project,.create{border:1px solid var(--line);background:#11111bd9;border-radius:16px;padding:18px}.stat small{color:var(--muted)}.stat strong{display:block;font:600 26px "Space Grotesk";margin-top:8px}.sectiontitle{font:600 18px "Space Grotesk";margin:28px 0 13px}.creategrid{display:grid;grid-template-columns:1fr 1fr auto;align-items:end;gap:12px}.creategrid .field{margin:0}.creategrid button{height:45px}.projectlist{display:grid;gap:10px}.project{display:flex;align-items:center;justify-content:space-between;gap:16px}.project h3{font:600 16px "Space Grotesk";margin:0 0 5px}.project p{color:var(--muted);font-size:12px;margin:0;overflow-wrap:anywhere}.pill{font-size:11px;padding:5px 8px;border-radius:99px;background:#2a2140;color:#d4bfff}.empty{padding:28px;text-align:center;border:1px dashed #38364a;border-radius:14px;color:var(--muted);font-size:14px}.footer{text-align:center;color:#77748b;font-size:12px;margin-top:38px}
+    @media(max-width:680px){.top{margin-bottom:54px}.panel{padding:18px}.panelhead{align-items:flex-start;flex-direction:column}.cards{grid-template-columns:1fr}.creategrid{grid-template-columns:1fr}.project{align-items:flex-start;flex-direction:column}h1{letter-spacing:-2px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header class="top">
+      <div class="brand"><div class="mark">r</div>reoohb</div>
+      <small>Out Of Here Bots</small>
+    </header>
+    <section class="hero">
+      <div class="eyebrow"><span class="dot"></span> Human verification platform</div>
+      <h1>Keep bots <span>out.</span><br>Keep people moving.</h1>
+      <p class="lead">A verification layer for websites. Add your projects, manage trusted domains, and build a safer sign-in flow.</p>
+    </section>
+
+    <section id="authPanel" class="panel">
+      <div class="panelhead"><div><h2 id="authTitle">Welcome to reoohb</h2><p class="sub" id="authSub">Sign in or create your developer account.</p></div>
+        <div class="tabs"><button class="tab active" id="loginTab" type="button">Log in</button><button class="tab" id="signupTab" type="button">Sign up</button></div>
+      </div>
+      <form id="authForm">
+        <div class="field"><label for="email">Email address</label><input id="email" type="email" autocomplete="email" placeholder="you@example.com" required></div>
+        <div class="field"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters" required></div>
+        <button class="primary wide" id="authSubmit" type="submit">Log in</button>
+      </form>
+      <div class="message" id="authMessage" role="status"></div>
+    </section>
+
+    <section id="dashboard" class="dash hidden">
+      <div class="dashbar"><div><h2>Developer dashboard</h2><p class="sub" id="userEmail"></p></div><button class="ghost" id="logout" type="button">Log out</button></div>
+      <div class="cards">
+        <div class="stat"><small>Your projects</small><strong id="projectCount">0</strong></div>
+        <div class="stat"><small>Verification mode</small><strong>Risk-based</strong></div>
+        <div class="stat"><small>Service status</small><strong style="color:var(--good)">Setup</strong></div>
+      </div>
+      <div class="create">
+        <h3 style="font:600 18px 'Space Grotesk';margin-bottom:5px">Create a project</h3>
+        <p class="sub">Register a website that will use reoohb.</p>
+        <form id="projectForm" class="creategrid">
+          <div class="field"><label for="projectName">Project name</label><input id="projectName" maxlength="60" placeholder="My website" required></div>
+          <div class="field"><label for="domain">Website domain</label><input id="domain" maxlength="253" placeholder="example.com" required></div>
+          <button class="primary" id="projectSubmit" type="submit">Create project</button>
+        </form>
+        <div class="message" id="projectMessage" role="status"></div>
+      </div>
+      <h3 class="sectiontitle">Your projects</h3>
+      <div class="projectlist" id="projectList"><div class="empty">Loading your projects…</div></div>
+    </section>
+    <p class="footer">reoohb · Privacy-first verification · Early prototype</p>
+  </main>
+
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/+esm";
+
+    const SUPABASE_URL = "https://wdkpojqtftvpfeuctlzi.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_qVM5jLTvDgZjFhiDqc5Wqw_VxfrvtHy";
+    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+    const $ = (id) => document.getElementById(id);
+    let authMode = "login";
+    const authPanel = $("authPanel"), dashboard = $("dashboard");
+
+    function setMode(mode) {
+      authMode = mode;
+      $("loginTab").classList.toggle("active", mode === "login");
+      $("signupTab").classList.toggle("active", mode === "signup");
+      $("authTitle").textContent = mode === "login" ? "Welcome back" : "Create your account";
+      $("authSub").textContent = mode === "login" ? "Log in to manage your reoohb projects." : "Create your reoohb developer account.";
+      $("authSubmit").textContent = mode === "login" ? "Log in" : "Create account";
+      $("password").autocomplete = mode === "login" ? "current-password" : "new-password";
+      $("authMessage").textContent = "";
+    }
+    $("loginTab").addEventListener("click", () => setMode("login"));
+    $("signupTab").addEventListener("click", () => setMode("signup"));
+
+    $("authForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = $("authSubmit");
+      button.disabled = true;
+      $("authMessage").textContent = "Please wait…";
+      const email = $("email").value.trim();
+      const password = $("password").value;
+      const result = authMode === "signup"
+        ? await supabase.auth.signUp({ email, password, options: { emailRedirectTo: location.origin } })
+        : await supabase.auth.signInWithPassword({ email, password });
+      button.disabled = false;
+      if (result.error) { $("authMessage").textContent = result.error.message; return; }
+      if (authMode === "signup" && !result.data.session) {
+        $("authMessage").style.color = "var(--good)";
+        $("authMessage").textContent = "Account created. Check your email to confirm it, then log in.";
+        return;
+      }
+      $("authMessage").style.color = "var(--good)";
+      $("authMessage").textContent = "Signed in!";
+      await showDashboard(result.data.user);
+    });
+
+    async function showDashboard(user) {
+      authPanel.classList.add("hidden");
+      dashboard.classList.remove("hidden");
+      $("userEmail").textContent = user.email || "Signed in";
+      await loadProjects();
+    }
+    async function loadProjects() {
+      const { data, error } = await supabase.from("reoohb_projects").select("id,name,domain,public_id,created_at").order("created_at", { ascending: false });
+      if (error) { $("projectList").innerHTML = '<div class="empty">Could not load projects: ' + escapeHtml(error.message) + '</div>'; return; }
+      $("projectCount").textContent = data.length;
+      if (!data.length) { $("projectList").innerHTML = '<div class="empty">No projects yet. Create your first one above.</div>'; return; }
+      $("projectList").innerHTML = data.map((p) => `
+        <article class="project">
+          <div><h3>${escapeHtml(p.name)} <span class="pill">Registered</span></h3><p>${escapeHtml(p.domain)}</p><p style="margin-top:6px">Public project ID: ${escapeHtml(p.public_id)}</p></div>
+          <button class="ghost copy-id" data-id="${escapeHtml(p.public_id)}" type="button">Copy ID</button>
+        </article>`).join("");
+      document.querySelectorAll(".copy-id").forEach((button) => button.addEventListener("click", async () => {
+        await navigator.clipboard.writeText(button.dataset.id);
+        button.textContent = "Copied!";
+        setTimeout(() => button.textContent = "Copy ID", 1400);
+      }));
+    }
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" })[c]);
+    }
+    $("projectForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = $("projectSubmit");
+      button.disabled = true;
+      $("projectMessage").textContent = "Creating project…";
+      const name = $("projectName").value.trim();
+      let domain = $("domain").value.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/\/$/, "");
+      if (!domain || domain.includes("/") || domain.includes(" ")) {
+        $("projectMessage").textContent = "Enter a domain like example.com (without a path).";
+        button.disabled = false; return;
+      }
+      const { data: { user } } = await supabase.auth.getUser();
+      const { error } = await supabase.from("reoohb_projects").insert({ owner_id: user.id, name, domain });
+      button.disabled = false;
+      if (error) { $("projectMessage").textContent = error.message; return; }
+      $("projectMessage").style.color = "var(--good)";
+      $("projectMessage").textContent = "Project created!";
+      $("projectName").value = ""; $("domain").value = "";
+      await loadProjects();
+    });
+    $("logout").addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      dashboard.classList.add("hidden"); authPanel.classList.remove("hidden");
+      setMode("login"); $("password").value = "";
+    });
+
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session?.user) await showDashboard(session.user);
+    supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) showDashboard(session.user);
+      else { dashboard.classList.add("hidden"); authPanel.classList.remove("hidden"); }
+    });
+  </script>
+</body>
+</html>
