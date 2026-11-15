@@ -19,7 +19,9 @@ The dashboard checks the Edge Function health endpoint and displays its status. 
 - Authenticated developer dashboard.
 - Create projects and register domains.
 - Random public project IDs.
-- A one-time project API secret. Only its SHA-256 hash is stored server-side.
+- A one-time initial project API secret. Only its SHA-256 hash is stored server-side.
+- Multiple named API codes per project, with one-time display and revocation controls.
+- Forgot-password email flow, password recovery screen, and signed-in password changes.
 - Per-user project access protected by Row Level Security.
 
 ## Add the verification widget to a website
@@ -128,7 +130,16 @@ The exchange consumes the code atomically. The customer website must create its 
 3. The dashboard should publish at `https://echothedcdev.github.io/reoohb/`.
 4. In Supabase **Authentication → URL Configuration**, set the Site URL to `https://echothedcdev.github.io/reoohb/` and add `https://echothedcdev.github.io/reoohb/**` to the Redirect URLs list. This is needed for email confirmation redirects.
 
-The repository is prepared for GitHub Pages, but Pages still needs to be enabled in repository settings.
+GitHub Pages is published at `https://echothedcdev.github.io/reoohb/`. For password recovery and signup confirmation, make sure the Supabase Site URL is `https://echothedcdev.github.io/reoohb/` and the Redirect URLs include `https://echothedcdev.github.io/reoohb/**`.
+
+## Account and project-code management
+
+- Use **Forgot password?** on the login panel to request a reset email.
+- The recovery link returns to the dashboard, where you can choose a new password.
+- Signed-in users can change their password in **Account security**.
+- Open **Manage codes** on a project to create additional named API codes or revoke them.
+- Each API code is shown only once. Store it in that project's backend environment variables, not browser code.
+- Revoking a code immediately prevents it from authenticating future verification exchanges. The original project secret created with the project remains supported for compatibility.
 
 ## Current limitations
 
